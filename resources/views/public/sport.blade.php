@@ -136,45 +136,45 @@
                         <div class="bg-white rounded-xl shadow overflow-hidden divide-y divide-gray-100">
                             @foreach($grouped[$gender] as $m)
                             <div class="px-4 py-2.5 hover:bg-gray-50 transition">
-                                {{-- Үндсэн мөр --}}
-                                <div class="flex items-center gap-3">
-                                    <span class="text-xs text-gray-400 w-10 shrink-0">{{ $m->scheduled_at->format('H:i') }}</span>
-                                    @if($m->round)
-                                        <span class="text-xs bg-gray-100 text-gray-500 px-2 py-0.5 rounded shrink-0">{{ $m->round }}</span>
-                                    @endif
-
-                                    <span class="flex-1 text-sm font-semibold text-right truncate
-                                        {{ $m->isFinished() && $m->team1_score > $m->team2_score ? 'text-blue-700' : 'text-gray-800' }}">
-                                        {{ $m->team1->short_name ?? $m->team1->name }}
-                                    </span>
-
-                                    <div class="text-center w-20 shrink-0">
-                                        @if($m->isFinished())
-                                            <span class="font-black text-gray-800">{{ $m->team1_score }} – {{ $m->team2_score }}</span>
-                                        @elseif($m->isLive())
-                                            <span class="text-red-500 font-bold text-xs animate-pulse">● LIVE</span>
-                                        @else
-                                            <span class="text-gray-300 font-bold text-sm">vs</span>
+                                {{-- Дээд мөр: цаг + хэсэг + статус --}}
+                                <div class="flex items-center justify-between gap-2 mb-1.5">
+                                    <div class="flex items-center gap-2 min-w-0">
+                                        <span class="text-xs text-gray-400 shrink-0">{{ $m->scheduled_at->format('H:i') }}</span>
+                                        @if($m->round)
+                                            <span class="text-xs bg-gray-100 text-gray-500 px-2 py-0.5 rounded shrink-0">{{ $m->round }}</span>
+                                        @endif
+                                        @if($m->venue)
+                                            <span class="text-xs text-gray-400 truncate">📍 {{ $m->venue }}</span>
                                         @endif
                                     </div>
-
-                                    <span class="flex-1 text-sm font-semibold truncate
-                                        {{ $m->isFinished() && $m->team2_score > $m->team1_score ? 'text-blue-700' : 'text-gray-800' }}">
-                                        {{ $m->team2->short_name ?? $m->team2->name }}
-                                    </span>
-
                                     @if($m->isFinished())
                                         <span class="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full shrink-0">Дууссан</span>
                                     @elseif($m->isLive())
-                                        <span class="text-xs bg-red-100 text-red-600 px-2 py-0.5 rounded-full shrink-0">Live</span>
+                                        <span class="text-xs bg-red-100 text-red-600 px-2 py-0.5 rounded-full shrink-0 animate-pulse">● Live</span>
                                     @else
                                         <span class="text-xs bg-gray-100 text-gray-400 px-2 py-0.5 rounded-full shrink-0">Болоогүй</span>
                                     @endif
                                 </div>
-                                {{-- Заал --}}
-                                @if($m->venue)
-                                <div class="mt-0.5 pl-10 text-xs text-gray-400">📍 {{ $m->venue }}</div>
-                                @endif
+                                {{-- Доод мөр: баг 1 — оноо — баг 2 --}}
+                                <div class="flex items-center gap-2">
+                                    <span class="flex-1 text-sm font-semibold text-right leading-tight
+                                        {{ $m->isFinished() && $m->team1_score > $m->team2_score ? 'text-blue-700' : 'text-gray-800' }}">
+                                        {{ $m->team1->short_name ?? $m->team1->name }}
+                                    </span>
+                                    <div class="text-center w-16 shrink-0">
+                                        @if($m->isFinished())
+                                            <span class="font-black text-gray-800 text-sm">{{ $m->team1_score }} – {{ $m->team2_score }}</span>
+                                        @elseif($m->isLive())
+                                            <span class="text-red-500 font-bold text-xs animate-pulse">● LIVE</span>
+                                        @else
+                                            <span class="text-gray-300 font-bold">vs</span>
+                                        @endif
+                                    </div>
+                                    <span class="flex-1 text-sm font-semibold leading-tight
+                                        {{ $m->isFinished() && $m->team2_score > $m->team1_score ? 'text-blue-700' : 'text-gray-800' }}">
+                                        {{ $m->team2->short_name ?? $m->team2->name }}
+                                    </span>
+                                </div>
                             </div>
                             @endforeach
                         </div>
