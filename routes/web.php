@@ -5,6 +5,7 @@ use App\Http\Controllers\PublicController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\TeamController;
 use App\Http\Controllers\Admin\ResultController;
+use App\Http\Controllers\Admin\GroupController;
 use App\Http\Controllers\Admin\MatchController;
 use Illuminate\Support\Facades\Route;
 
@@ -20,6 +21,11 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(
     Route::resource('teams', TeamController::class)->except(['show']);
 
     Route::resource('matches', MatchController::class)->except(['show']);
+
+    Route::get('/groups', [GroupController::class, 'index'])->name('groups.index');
+    Route::post('/groups', [GroupController::class, 'store'])->name('groups.store');
+    Route::patch('/groups/{group}', [GroupController::class, 'update'])->name('groups.update');
+    Route::delete('/groups/{group}', [GroupController::class, 'destroy'])->name('groups.destroy');
 
     Route::get('/results', [ResultController::class, 'index'])->name('results.index');
     Route::get('/results/{sport}', [ResultController::class, 'edit'])->name('results.edit');

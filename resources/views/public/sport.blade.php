@@ -69,6 +69,45 @@
         @endforeach
     @endif
 
+    {{-- Groups --}}
+    @if($groups->isNotEmpty())
+    <div class="mt-10">
+        <h2 class="text-lg font-bold text-gray-800 mb-4">🏆 Хэсгийн хуваарилалт</h2>
+        @php
+            $genderLabels = ['male' => '🔵 Эрэгтэй', 'female' => '🔴 Эмэгтэй', 'mixed' => '🟡 Холимог'];
+            $genderOrder  = ['male','female','mixed'];
+        @endphp
+        @foreach($genderOrder as $gender)
+            @if($groups->has($gender))
+            <div class="mb-6">
+                @if(!$sport->isMixed())
+                <div class="text-sm font-bold text-gray-500 uppercase tracking-widest mb-3">
+                    {{ $genderLabels[$gender] }}
+                </div>
+                @endif
+                <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+                    @foreach($groups[$gender] as $groupName => $members)
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+                        <div class="bg-blue-700 text-white text-xs font-bold px-3 py-1.5 tracking-widest uppercase">
+                            {{ $groupName }} Хэсэг
+                        </div>
+                        <ul class="divide-y divide-gray-50">
+                            @foreach($members as $ga)
+                            <li class="px-3 py-2 flex items-center gap-2">
+                                <span class="text-xs text-gray-400 w-4 shrink-0">{{ $ga->order_num }}</span>
+                                <span class="text-xs text-gray-700 leading-tight">{{ $ga->team->name }}</span>
+                            </li>
+                            @endforeach
+                        </ul>
+                    </div>
+                    @endforeach
+                </div>
+            </div>
+            @endif
+        @endforeach
+    </div>
+    @endif
+
     {{-- Matches --}}
     <div class="mt-10">
         <h2 class="text-lg font-bold text-gray-800 mb-4">📅 Тоглолтын хуваарь</h2>

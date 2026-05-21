@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\GroupAssignment;
 use App\Models\Sport;
 use App\Models\Team;
 use App\Models\Result;
@@ -42,6 +43,15 @@ class PublicController extends Controller
     {
         $sport = Sport::where('slug', $slug)->firstOrFail();
 
+        $groups = GroupAssignment::where('sport_id', $sport->id)
+            ->with('team')
+            ->orderBy('gender')
+            ->orderBy('group_name')
+            ->orderBy('order_num')
+            ->get()
+            ->groupBy('gender')
+            ->map(fn($g) => $g->groupBy('group_name'));
+
         $results = Result::where('sport_id', $sport->id)
             ->with('team')
             ->orderBy('gender')
@@ -55,6 +65,6 @@ class PublicController extends Controller
             ->get()
             ->groupBy(fn($m) => $m->scheduled_at->toDateString());
 
-        return view('public.sport', compact('sport', 'results', 'matches'));
+        return view('public.sport', compact('sport', 'results', 'matches', 'groups'));
     }
 }
