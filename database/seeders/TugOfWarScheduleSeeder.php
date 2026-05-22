@@ -118,7 +118,10 @@ class TugOfWarScheduleSeeder extends Seeder
         $sport = Sport::where('slug', 'tug-of-war')->firstOrFail();
         $teams = Team::pluck('id', 'name')->toArray();
 
-        GameMatch::where('sport_id', $sport->id)->delete();
+        if (GameMatch::where('sport_id', $sport->id)->exists()) {
+            $this->command->warn('Олс таталтын хуваарь аль хэдийн байна. Устгахын тулд --force ашиглана уу.');
+            return;
+        }
 
         $inserted = 0;
         $missing  = [];

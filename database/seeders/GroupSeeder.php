@@ -265,7 +265,10 @@ class GroupSeeder extends Seeder
 
     public function run(): void
     {
-        DB::table('group_assignments')->truncate();
+        if (DB::table('group_assignments')->exists()) {
+            $this->command->warn('Хэсгийн хуваарилалт аль хэдийн байна. Устгахын тулд --force ашиглана уу.');
+            return;
+        }
 
         $teamCache  = Team::pluck('id', 'name')->toArray();
         $sportCache = Sport::pluck('id', 'slug')->toArray();
