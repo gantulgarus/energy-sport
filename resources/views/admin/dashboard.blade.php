@@ -9,12 +9,16 @@
     <div class="bg-white rounded-xl shadow p-5 text-center">
         <div class="text-3xl font-bold text-blue-700">{{ $teamsCount }}</div>
         <div class="text-gray-500 text-sm mt-1">Бүртгэлтэй байгууллага</div>
+        @if(auth()->user()->is_admin)
         <a href="{{ route('admin.teams.index') }}" class="text-blue-600 text-xs hover:underline mt-2 inline-block">Удирдах →</a>
+        @endif
     </div>
     <div class="bg-white rounded-xl shadow p-5 text-center">
         <div class="text-3xl font-bold text-green-700">{{ $resultsCount }}</div>
         <div class="text-gray-500 text-sm mt-1">Бүртгэлтэй үр дүн</div>
+        @if(auth()->user()->is_admin)
         <a href="{{ route('admin.results.index') }}" class="text-blue-600 text-xs hover:underline mt-2 inline-block">Оруулах →</a>
+        @endif
     </div>
     <div class="bg-white rounded-xl shadow p-5 text-center">
         <div class="text-3xl font-bold text-yellow-600">6</div>
@@ -23,7 +27,9 @@
     <div class="bg-white rounded-xl shadow p-5 text-center">
         <div class="text-3xl font-bold text-purple-700">{{ \App\Models\GameMatch::count() }}</div>
         <div class="text-gray-500 text-sm mt-1">Тоглолтын хуваарь</div>
+        @if(auth()->user()->is_admin)
         <a href="{{ route('admin.matches.index') }}" class="text-blue-600 text-xs hover:underline mt-2 inline-block">Удирдах →</a>
+        @endif
     </div>
 </div>
 
