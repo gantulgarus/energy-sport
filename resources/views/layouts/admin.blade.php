@@ -44,6 +44,9 @@
                 <a href="{{ route('admin.matches.index') }}" class="flex items-center gap-2 px-3 py-2 rounded hover:bg-blue-50 {{ request()->routeIs('admin.matches.*') ? 'bg-blue-100 text-blue-800 font-semibold' : 'text-gray-700' }}">
                     📅 Хуваарь
                 </a>
+                <a href="{{ route('admin.users.index') }}" class="flex items-center gap-2 px-3 py-2 rounded hover:bg-blue-50 {{ request()->routeIs('admin.users.*') ? 'bg-blue-100 text-blue-800 font-semibold' : 'text-gray-700' }}">
+                    👤 Хэрэглэгчид
+                </a>
             </nav>
         </aside>
 

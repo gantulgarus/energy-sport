@@ -51,7 +51,7 @@ class EsportsScheduleSeeder extends Seeder
             ['УБЦТС',            'АДС'],
             ['ТАЙШИР',           'ББЦТС'],
             ['БАГАНУУР ДС',      'ЭХҮТ'],
-            ['БӨӨРӨЛЖҮҮТИЙН ЦС','ДЦС-4'],
+            ['БӨӨРӨЛЖҮҮТИЙН ЦС', 'ДЦС-4'],
             ['УБДС',             'ЭХЗХ'],
             ['МОНХОРУС',         'ЦДҮС'],
             ['ДАРХАН ДС',        'ХАСУ ДАЯН'],
@@ -66,10 +66,7 @@ class EsportsScheduleSeeder extends Seeder
         $sport = Sport::where('slug', 'esports')->firstOrFail();
         $teams = Team::pluck('id', 'name')->toArray();
 
-        if (GameMatch::where('sport_id', $sport->id)->exists()) {
-            $this->command->warn('И-спортын хуваарь аль хэдийн байна. Устгахын тулд --force ашиглана уу.');
-            return;
-        }
+        GameMatch::where('sport_id', $sport->id)->delete();
 
         $inserted = 0;
         $missing  = [];
@@ -81,8 +78,14 @@ class EsportsScheduleSeeder extends Seeder
             $id1 = $teams[$db1] ?? null;
             $id2 = $teams[$db2] ?? null;
 
-            if (!$id1) { $missing[] = $t1; continue; }
-            if (!$id2) { $missing[] = $t2; continue; }
+            if (!$id1) {
+                $missing[] = $t1;
+                continue;
+            }
+            if (!$id2) {
+                $missing[] = $t2;
+                continue;
+            }
 
             GameMatch::create([
                 'sport_id'     => $sport->id,

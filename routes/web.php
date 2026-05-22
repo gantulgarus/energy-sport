@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\TeamController;
 use App\Http\Controllers\Admin\ResultController;
 use App\Http\Controllers\Admin\GroupController;
 use App\Http\Controllers\Admin\MatchController;
+use App\Http\Controllers\Admin\UserController;
 use Illuminate\Support\Facades\Route;
 
 // Public routes
@@ -30,6 +31,8 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(
     Route::get('/results', [ResultController::class, 'index'])->name('results.index');
     Route::get('/results/{sport}', [ResultController::class, 'edit'])->name('results.edit');
     Route::post('/results/{sport}', [ResultController::class, 'update'])->name('results.update');
+
+    Route::resource('users', UserController::class)->except(['show']);
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
