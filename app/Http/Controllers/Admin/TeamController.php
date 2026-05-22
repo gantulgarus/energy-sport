@@ -22,6 +22,7 @@ class TeamController extends Controller
 
     public function store(Request $request)
     {
+        abort_unless(auth()->user()->is_admin, 403);
         $validated = $request->validate([
             'name' => 'required|string|max:255|unique:teams',
             'short_name' => 'nullable|string|max:50',
@@ -43,6 +44,7 @@ class TeamController extends Controller
 
     public function update(Request $request, Team $team)
     {
+        abort_unless(auth()->user()->is_admin, 403);
         $validated = $request->validate([
             'name' => 'required|string|max:255|unique:teams,name,' . $team->id,
             'short_name' => 'nullable|string|max:50',
@@ -62,6 +64,7 @@ class TeamController extends Controller
 
     public function destroy(Team $team)
     {
+        abort_unless(auth()->user()->is_admin, 403);
         if ($team->logo) Storage::disk('public')->delete($team->logo);
         $team->delete();
         return redirect()->route('admin.teams.index')->with('success', 'Байгууллага устгагдлаа.');

@@ -32,12 +32,14 @@
                 <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-2 px-3 py-2 rounded hover:bg-blue-50 {{ request()->routeIs('admin.dashboard') ? 'bg-blue-100 text-blue-800 font-semibold' : 'text-gray-700' }}">
                     📊 Хяналтын самбар
                 </a>
+                @if(auth()->user()->is_admin)
                 <a href="{{ route('admin.teams.index') }}" class="flex items-center gap-2 px-3 py-2 rounded hover:bg-blue-50 {{ request()->routeIs('admin.teams.*') ? 'bg-blue-100 text-blue-800 font-semibold' : 'text-gray-700' }}">
                     🏢 Байгууллагууд
                 </a>
                 <a href="{{ route('admin.groups.index') }}" class="flex items-center gap-2 px-3 py-2 rounded hover:bg-blue-50 {{ request()->routeIs('admin.groups.*') ? 'bg-blue-100 text-blue-800 font-semibold' : 'text-gray-700' }}">
                     🏆 Хэсгийн хуваарь
                 </a>
+                @endif
                 @if(auth()->user()->is_admin)
                 <a href="{{ route('admin.results.index') }}" class="flex items-center gap-2 px-3 py-2 rounded hover:bg-blue-50 {{ request()->routeIs('admin.results.*') ? 'bg-blue-100 text-blue-800 font-semibold' : 'text-gray-700' }}">
                     🏅 Үр дүн оруулах

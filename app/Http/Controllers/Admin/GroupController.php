@@ -32,7 +32,7 @@ class GroupController extends Controller
 
     public function store(Request $request)
     {
-        abort_unless(auth()->user()->canManageSport($request->sport_id), 403);
+        abort_unless(auth()->user()->is_admin, 403);
         $request->validate([
             'sport_id'   => 'required|exists:sports,id',
             'gender'     => 'required|in:male,female,mixed',
@@ -59,7 +59,7 @@ class GroupController extends Controller
 
     public function update(Request $request, GroupAssignment $group)
     {
-        abort_unless(auth()->user()->canManageSport($group->sport_id), 403);
+        abort_unless(auth()->user()->is_admin, 403);
         $request->validate([
             'group_name' => 'required|string|max:5',
             'order_num'  => 'required|integer|min:1',
@@ -74,7 +74,7 @@ class GroupController extends Controller
 
     public function destroy(GroupAssignment $group)
     {
-        abort_unless(auth()->user()->canManageSport($group->sport_id), 403);
+        abort_unless(auth()->user()->is_admin, 403);
         $sport = Sport::find($group->sport_id);
         $group->delete();
         return redirect()->route('admin.groups.index', ['sport' => $sport->slug])
