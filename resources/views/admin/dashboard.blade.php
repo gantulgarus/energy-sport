@@ -27,6 +27,7 @@
     </div>
 </div>
 
+@if(auth()->user()->is_admin)
 <h2 class="text-lg font-semibold text-gray-700 mb-3">Спорт бүрийн үр дүн оруулах</h2>
 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
     @foreach($sports as $sport)
@@ -41,4 +42,5 @@
     </a>
     @endforeach
 </div>
+@endif
 @endsection
