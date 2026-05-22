@@ -120,23 +120,39 @@
             @php
                 $genderOrder  = ['male', 'female', 'mixed'];
                 $genderLabels = ['male' => '🔵 Эрэгтэй', 'female' => '🔴 Эмэгтэй', 'mixed' => '🟡 Холимог'];
+                $dates        = $matches->keys();
+                $today        = \Carbon\Carbon::today()->toDateString();
+                $activeDate   = $dates->first(fn($d) => $d >= $today) ?? $dates->first();
             @endphp
+
+            {{-- Date tabs --}}
+            <div class="flex gap-2 overflow-x-auto pb-2 mb-5" style="scrollbar-width:none">
+                @foreach($dates as $date)
+                <button onclick="showMatchDate('{{ $date }}')" id="mtab-{{ $date }}"
+                        class="match-date-tab shrink-0 px-3 py-1.5 rounded-full text-sm font-semibold border transition
+                            {{ $date === $activeDate
+                                ? 'bg-blue-700 text-white border-blue-700'
+                                : 'bg-white text-gray-600 border-gray-200 hover:border-blue-400 hover:text-blue-700' }}">
+                    {{ \Carbon\Carbon::parse($date)->isoFormat('MM/DD · ddd') }}
+                </button>
+                @endforeach
+            </div>
+
+            {{-- Match panels --}}
             @foreach($matches as $date => $dayMatches)
-            <div class="mb-6">
-                <div class="text-xs font-bold text-blue-700 bg-blue-50 border border-blue-100 px-3 py-1 rounded-full inline-block mb-3 uppercase tracking-wide">
-                    {{ \Carbon\Carbon::parse($date)->isoFormat('MM/DD · dddd') }}
-                </div>
+            <div id="mday-{{ $date }}" class="{{ $date === $activeDate ? '' : 'hidden' }}">
                 @php $grouped = $dayMatches->groupBy('gender'); @endphp
                 @foreach($genderOrder as $gender)
                     @if($grouped->has($gender))
                     <div class="mb-4">
+                        @if(!$sport->isMixed())
                         <div class="text-xs font-bold text-gray-500 uppercase tracking-widest mb-1 pl-1">
                             {{ $genderLabels[$gender] }}
                         </div>
+                        @endif
                         <div class="bg-white rounded-xl shadow overflow-hidden divide-y divide-gray-100">
                             @foreach($grouped[$gender] as $m)
                             <div class="px-4 py-2.5 hover:bg-gray-50 transition">
-                                {{-- Дээд мөр: цаг + хэсэг + статус --}}
                                 <div class="flex items-center justify-between gap-2 mb-1.5">
                                     <div class="flex items-center gap-2 min-w-0">
                                         <span class="text-xs text-gray-400 shrink-0">{{ $m->scheduled_at->format('H:i') }}</span>
@@ -155,7 +171,6 @@
                                         <span class="text-xs bg-gray-100 text-gray-400 px-2 py-0.5 rounded-full shrink-0">Болоогүй</span>
                                     @endif
                                 </div>
-                                {{-- Доод мөр: баг 1 — оноо — баг 2 --}}
                                 <div class="flex items-center gap-2">
                                     <span class="flex-1 text-sm font-semibold text-right leading-tight
                                         {{ $m->isFinished() && $m->team1_score > $m->team2_score ? 'text-blue-700' : 'text-gray-800' }}">
@@ -183,6 +198,20 @@
                 @endforeach
             </div>
             @endforeach
+
+            <script>
+            function showMatchDate(date) {
+                document.querySelectorAll('[id^="mday-"]').forEach(el => el.classList.add('hidden'));
+                document.querySelectorAll('.match-date-tab').forEach(el => {
+                    el.classList.remove('bg-blue-700','text-white','border-blue-700');
+                    el.classList.add('bg-white','text-gray-600','border-gray-200');
+                });
+                document.getElementById('mday-' + date).classList.remove('hidden');
+                const tab = document.getElementById('mtab-' + date);
+                tab.classList.add('bg-blue-700','text-white','border-blue-700');
+                tab.classList.remove('bg-white','text-gray-600','border-gray-200');
+            }
+            </script>
         @endif
     </div>
 
