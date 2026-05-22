@@ -41,7 +41,7 @@ class TugOfWarScheduleSeeder extends Seeder
     // [team1, team2] — matches 1-66 (67-74 are knockout placeholders, skipped)
     private function matches(): array
     {
-        $d = '2026-05-27';
+        $d = '2026-05-23';
         $t = '09:00';
         return [
             [$d,$t,'ДҮТ ТӨХХК','ДЦС-3 ТӨХК'],

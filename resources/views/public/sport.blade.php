@@ -150,15 +150,21 @@
                             {{ $genderLabels[$gender] }}
                         </div>
                         @endif
-                        <div class="bg-white rounded-xl shadow overflow-hidden divide-y divide-gray-100">
-                            @foreach($grouped[$gender] as $m)
+                        @php
+                            $byRound = $grouped[$gender]->groupBy(fn($m) => $m->round ?? '');
+                        @endphp
+                        @foreach($byRound as $round => $roundMatches)
+                        @if($round !== '')
+                        <div class="text-xs font-semibold text-gray-400 uppercase tracking-widest px-1 mb-1 {{ !$loop->first ? 'mt-3' : '' }}">
+                            {{ $round }}
+                        </div>
+                        @endif
+                        <div class="bg-white rounded-xl shadow overflow-hidden divide-y divide-gray-100 {{ !$loop->last ? 'mb-2' : '' }}">
+                            @foreach($roundMatches as $m)
                             <div class="px-4 py-2.5 hover:bg-gray-50 transition">
                                 <div class="flex items-center justify-between gap-2 mb-1.5">
                                     <div class="flex items-center gap-2 min-w-0">
                                         <span class="text-xs text-gray-400 shrink-0">{{ $m->scheduled_at->format('H:i') }}</span>
-                                        @if($m->round)
-                                            <span class="text-xs bg-gray-100 text-gray-500 px-2 py-0.5 rounded shrink-0">{{ $m->round }}</span>
-                                        @endif
                                         @if($m->venue)
                                             <span class="text-xs text-gray-400 truncate">📍 {{ $m->venue }}</span>
                                         @endif
@@ -193,6 +199,7 @@
                             </div>
                             @endforeach
                         </div>
+                        @endforeach
                     </div>
                     @endif
                 @endforeach
