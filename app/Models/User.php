@@ -22,7 +22,19 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'is_admin',
+        'sport_id',
     ];
+
+    public function sport()
+    {
+        return $this->belongsTo(Sport::class);
+    }
+
+    public function canManageSport(int $sportId): bool
+    {
+        return $this->is_admin || $this->sport_id === $sportId;
+    }
 
     /**
      * The attributes that should be hidden for serialization.

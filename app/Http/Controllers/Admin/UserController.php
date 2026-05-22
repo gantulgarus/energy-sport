@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Sport;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -18,7 +19,8 @@ class UserController extends Controller
 
     public function create()
     {
-        return view('admin.users.form', ['user' => new User]);
+        $sports = Sport::orderBy('sort_order')->get();
+        return view('admin.users.form', ['user' => new User, 'sports' => $sports]);
     }
 
     public function store(Request $request)
@@ -33,6 +35,8 @@ class UserController extends Controller
             'name'               => $request->name,
             'email'              => $request->email,
             'password'           => Hash::make($request->password),
+            'is_admin'           => $request->boolean('is_admin'),
+            'sport_id'           => $request->boolean('is_admin') ? null : $request->sport_id,
             'email_verified_at'  => now(),
         ]);
 
@@ -41,7 +45,8 @@ class UserController extends Controller
 
     public function edit(User $user)
     {
-        return view('admin.users.form', compact('user'));
+        $sports = Sport::orderBy('sort_order')->get();
+        return view('admin.users.form', compact('user', 'sports'));
     }
 
     public function update(Request $request, User $user)
@@ -52,8 +57,10 @@ class UserController extends Controller
             'password' => ['nullable', 'confirmed', Password::min(8)],
         ]);
 
-        $user->name  = $request->name;
-        $user->email = $request->email;
+        $user->name     = $request->name;
+        $user->email    = $request->email;
+        $user->is_admin = $request->boolean('is_admin');
+        $user->sport_id = $request->boolean('is_admin') ? null : $request->sport_id;
         if ($request->filled('password')) {
             $user->password = Hash::make($request->password);
         }

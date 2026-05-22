@@ -45,6 +45,33 @@
                    class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none">
         </div>
 
+        {{-- Эрх --}}
+        <div class="border-t pt-4">
+            <label class="block text-sm font-medium text-gray-700 mb-3">Эрх</label>
+
+            <label class="flex items-center gap-3 cursor-pointer mb-3">
+                <input type="checkbox" name="is_admin" value="1" id="is_admin"
+                       {{ old('is_admin', $user->is_admin) ? 'checked' : '' }}
+                       class="w-4 h-4 rounded border-gray-300 text-blue-600"
+                       onchange="document.getElementById('sport-section').style.display = this.checked ? 'none' : 'block'">
+                <span class="text-sm text-gray-700">Супер админ <span class="text-xs text-gray-400">(бүх спортыг удирдах)</span></span>
+            </label>
+
+            <div id="sport-section" style="{{ old('is_admin', $user->is_admin) ? 'display:none' : '' }}">
+                <label class="block text-xs text-gray-500 mb-1">Удирдах спортын төрөл</label>
+                <select name="sport_id"
+                        class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                    <option value="">— сонгох —</option>
+                    @foreach($sports as $sport)
+                        <option value="{{ $sport->id }}"
+                            {{ old('sport_id', $user->sport_id) == $sport->id ? 'selected' : '' }}>
+                            {{ $sport->icon }} {{ $sport->name }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+        </div>
+
         <div class="pt-2">
             <button type="submit"
                     class="bg-blue-700 hover:bg-blue-800 text-white font-semibold px-6 py-2 rounded-lg text-sm transition">

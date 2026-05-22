@@ -17,6 +17,7 @@
             <tr class="bg-gray-800 text-white text-left">
                 <th class="px-4 py-3">Нэр</th>
                 <th class="px-4 py-3">И-мэйл</th>
+                <th class="px-4 py-3">Эрх</th>
                 <th class="px-4 py-3">Бүртгэсэн огноо</th>
                 <th class="px-4 py-3 w-28"></th>
             </tr>
@@ -31,6 +32,15 @@
                     @endif
                 </td>
                 <td class="px-4 py-3 text-gray-600">{{ $user->email }}</td>
+                <td class="px-4 py-3">
+                    @if($user->is_admin)
+                        <span class="text-xs bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full font-medium">Супер админ</span>
+                    @elseif($user->sport)
+                        <span class="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full">{{ $user->sport->icon }} {{ $user->sport->name }}</span>
+                    @else
+                        <span class="text-xs text-gray-400">—</span>
+                    @endif
+                </td>
                 <td class="px-4 py-3 text-gray-400 text-xs">{{ $user->created_at->format('Y-m-d') }}</td>
                 <td class="px-4 py-3 text-right">
                     <div class="flex justify-end gap-2">

@@ -29,7 +29,10 @@ class MatchController extends Controller
 
     public function create()
     {
-        $sports = Sport::orderBy('sort_order')->get();
+        $user   = auth()->user();
+        $sports = $user->is_admin
+            ? Sport::orderBy('sort_order')->get()
+            : Sport::where('id', $user->sport_id)->get();
         $teams  = Team::where('is_active', true)->orderBy('name')->get();
         return view('admin.matches.form', compact('sports', 'teams'));
     }
@@ -44,24 +47,33 @@ class MatchController extends Controller
             'scheduled_at' => 'required|date',
         ]);
 
-        GameMatch::create($request->only([
+        abort_unless(auth()->user()->canManageSport($request->sport_id), 403);
+
+        $match = GameMatch::create($request->only([
             'sport_id', 'team1_id', 'team2_id', 'gender',
             'round', 'venue', 'scheduled_at',
             'team1_score', 'team2_score', 'status', 'notes',
         ]));
 
-        return redirect()->route('admin.matches.index')->with('success', 'Тоглолт нэмэгдлээ.');
+        $slug = Sport::find($match->sport_id)->slug;
+        return redirect()->route('admin.matches.index', ['sport' => $slug])->with('success', 'Тоглолт нэмэгдлээ.');
     }
 
     public function edit(GameMatch $match)
     {
-        $sports = Sport::orderBy('sort_order')->get();
+        abort_unless(auth()->user()->canManageSport($match->sport_id), 403);
+        $user   = auth()->user();
+        $sports = $user->is_admin
+            ? Sport::orderBy('sort_order')->get()
+            : Sport::where('id', $user->sport_id)->get();
         $teams  = Team::where('is_active', true)->orderBy('name')->get();
         return view('admin.matches.form', compact('match', 'sports', 'teams'));
     }
 
     public function update(Request $request, GameMatch $match)
     {
+        abort_unless(auth()->user()->canManageSport($match->sport_id), 403);
+
         $request->validate([
             'sport_id'     => 'required|exists:sports,id',
             'team1_id'     => 'required|exists:teams,id|different:team2_id',
@@ -76,11 +88,13 @@ class MatchController extends Controller
             'team1_score', 'team2_score', 'status', 'notes',
         ]));
 
-        return redirect()->route('admin.matches.index')->with('success', 'Тоглолт шинэчлэгдлээ.');
+        $slug = Sport::find($match->sport_id)->slug;
+        return redirect()->route('admin.matches.index', ['sport' => $slug])->with('success', 'Тоглолт шинэчлэгдлээ.');
     }
 
     public function destroy(GameMatch $match)
     {
+        abort_unless(auth()->user()->canManageSport($match->sport_id), 403);
         $match->delete();
         return back()->with('success', 'Тоглолт устгагдлаа.');
     }
