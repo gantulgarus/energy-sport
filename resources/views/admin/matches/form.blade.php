@@ -4,9 +4,14 @@
 
 @section('content')
 <div class="max-w-2xl">
+    @php
+        $sport = isset($match) ? $match->sport : $activeSport;
+    @endphp
     <div class="flex items-center gap-3 mb-6">
-        <a href="{{ route('admin.matches.index') }}" class="text-gray-400 hover:text-gray-600">←</a>
-        <h1 class="text-xl font-bold text-gray-800">{{ isset($match) ? 'Тоглолт засах' : 'Тоглолт нэмэх' }}</h1>
+        <a href="{{ route('admin.matches.index', ['sport' => $sport->slug]) }}" class="text-gray-400 hover:text-gray-600">←</a>
+        <h1 class="text-xl font-bold text-gray-800">
+            {{ $sport->icon }} {{ $sport->name }} — {{ isset($match) ? 'Тоглолт засах' : 'Тоглолт нэмэх' }}
+        </h1>
     </div>
 
     <form method="POST"
@@ -15,16 +20,14 @@
         @csrf
         @if(isset($match)) @method('PUT') @endif
 
+        <input type="hidden" name="sport_id" value="{{ $sport->id }}">
+
         <div class="grid grid-cols-2 gap-4">
             <div>
                 <label class="block text-xs font-semibold text-gray-600 mb-1">Спорт</label>
-                <select name="sport_id" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm" required>
-                    @foreach($sports as $sport)
-                        <option value="{{ $sport->id }}" {{ old('sport_id', $match->sport_id ?? '') == $sport->id ? 'selected' : '' }}>
-                            {{ $sport->name }}
-                        </option>
-                    @endforeach
-                </select>
+                <div class="w-full border border-gray-100 bg-gray-50 rounded-lg px-3 py-2 text-sm text-gray-700">
+                    {{ $sport->icon }} {{ $sport->name }}
+                </div>
             </div>
             <div>
                 <label class="block text-xs font-semibold text-gray-600 mb-1">Ангилал</label>
@@ -118,7 +121,7 @@
             <button type="submit" class="bg-blue-700 hover:bg-blue-800 text-white font-semibold px-6 py-2 rounded-lg text-sm transition">
                 {{ isset($match) ? 'Хадгалах' : 'Нэмэх' }}
             </button>
-            <a href="{{ route('admin.matches.index') }}" class="text-gray-500 hover:text-gray-700 text-sm px-4 py-2">Цуцлах</a>
+            <a href="{{ route('admin.matches.index', ['sport' => $sport->slug]) }}" class="text-gray-500 hover:text-gray-700 text-sm px-4 py-2">Цуцлах</a>
         </div>
     </form>
 </div>

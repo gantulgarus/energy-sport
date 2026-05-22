@@ -38,15 +38,29 @@
                 <a href="{{ route('admin.groups.index') }}" class="flex items-center gap-2 px-3 py-2 rounded hover:bg-blue-50 {{ request()->routeIs('admin.groups.*') ? 'bg-blue-100 text-blue-800 font-semibold' : 'text-gray-700' }}">
                     🏆 Хэсгийн хуваарь
                 </a>
+                @if(auth()->user()->is_admin)
                 <a href="{{ route('admin.results.index') }}" class="flex items-center gap-2 px-3 py-2 rounded hover:bg-blue-50 {{ request()->routeIs('admin.results.*') ? 'bg-blue-100 text-blue-800 font-semibold' : 'text-gray-700' }}">
                     🏅 Үр дүн оруулах
                 </a>
-                <a href="{{ route('admin.matches.index') }}" class="flex items-center gap-2 px-3 py-2 rounded hover:bg-blue-50 {{ request()->routeIs('admin.matches.*') ? 'bg-blue-100 text-blue-800 font-semibold' : 'text-gray-700' }}">
-                    📅 Хуваарь
-                </a>
+                @endif
+                @php
+                    $navSports = auth()->user()->is_admin
+                        ? \App\Models\Sport::orderBy('sort_order')->get()
+                        : \App\Models\Sport::where('id', auth()->user()->sport_id)->get();
+                @endphp
+                <div class="px-3 py-1.5 text-xs font-semibold text-gray-400 uppercase tracking-wider mt-1">📅 Хуваарь</div>
+                @foreach($navSports as $navSport)
+                    <a href="{{ route('admin.matches.index', ['sport' => $navSport->slug]) }}"
+                       class="flex items-center gap-2 pl-5 pr-3 py-1.5 rounded hover:bg-blue-50 text-sm
+                           {{ request()->routeIs('admin.matches.*') && request()->query('sport') === $navSport->slug ? 'bg-blue-100 text-blue-800 font-semibold' : 'text-gray-600' }}">
+                        {{ $navSport->icon }} {{ $navSport->name }}
+                    </a>
+                @endforeach
+                @if(auth()->user()->is_admin)
                 <a href="{{ route('admin.users.index') }}" class="flex items-center gap-2 px-3 py-2 rounded hover:bg-blue-50 {{ request()->routeIs('admin.users.*') ? 'bg-blue-100 text-blue-800 font-semibold' : 'text-gray-700' }}">
                     👤 Хэрэглэгчид
                 </a>
+                @endif
             </nav>
         </aside>
 

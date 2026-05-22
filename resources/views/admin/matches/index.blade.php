@@ -5,24 +5,12 @@
 @section('content')
 <div class="flex items-center justify-between mb-6">
     <h1 class="text-xl font-bold text-gray-800">📅 Тоглолтын хуваарь</h1>
-    <a href="{{ route('admin.matches.create') }}"
+    <a href="{{ route('admin.matches.create', ['sport' => $activeSport->slug]) }}"
        class="bg-blue-700 hover:bg-blue-800 text-white text-sm font-semibold px-4 py-2 rounded-lg transition">
-        + Тоглолт нэмэх
+        + {{ $activeSport->name }} нэмэх
     </a>
 </div>
 
-{{-- Sport tabs --}}
-<div class="flex flex-wrap gap-2 mb-6">
-    @foreach($sports as $sport)
-        <a href="{{ route('admin.matches.index', ['sport' => $sport->slug]) }}"
-           class="flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-semibold transition
-               {{ $activeSport->id === $sport->id
-                   ? 'bg-blue-700 text-white shadow'
-                   : 'bg-white text-gray-600 border border-gray-200 hover:border-blue-300 hover:text-blue-700' }}">
-            {{ $sport->icon }} {{ $sport->name }}
-        </a>
-    @endforeach
-</div>
 
 @php
     $genderOrder  = ['male', 'female', 'mixed'];

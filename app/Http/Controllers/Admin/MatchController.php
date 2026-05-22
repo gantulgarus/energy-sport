@@ -27,14 +27,15 @@ class MatchController extends Controller
         return view('admin.matches.index', compact('matches', 'sports', 'activeSport'));
     }
 
-    public function create()
+    public function create(Request $request)
     {
-        $user   = auth()->user();
-        $sports = $user->is_admin
+        $user        = auth()->user();
+        $sports      = $user->is_admin
             ? Sport::orderBy('sort_order')->get()
             : Sport::where('id', $user->sport_id)->get();
-        $teams  = Team::where('is_active', true)->orderBy('name')->get();
-        return view('admin.matches.form', compact('sports', 'teams'));
+        $activeSport = $sports->firstWhere('slug', $request->query('sport')) ?? $sports->first();
+        $teams       = Team::where('is_active', true)->orderBy('name')->get();
+        return view('admin.matches.form', compact('sports', 'teams', 'activeSport'));
     }
 
     public function store(Request $request)
@@ -66,8 +67,9 @@ class MatchController extends Controller
         $sports = $user->is_admin
             ? Sport::orderBy('sort_order')->get()
             : Sport::where('id', $user->sport_id)->get();
-        $teams  = Team::where('is_active', true)->orderBy('name')->get();
-        return view('admin.matches.form', compact('match', 'sports', 'teams'));
+        $teams       = Team::where('is_active', true)->orderBy('name')->get();
+        $activeSport = $match->sport;
+        return view('admin.matches.form', compact('match', 'sports', 'teams', 'activeSport'));
     }
 
     public function update(Request $request, GameMatch $match)

@@ -31,7 +31,7 @@ class ResultController extends Controller
     public function update(Request $request, string $sportSlug)
     {
         $sport = \App\Models\Sport::where('slug', $sportSlug)->firstOrFail();
-        abort_unless(auth()->user()->canManageSport($sport->id), 403);
+        abort_unless(auth()->user()->is_admin, 403);
         $genders = $sport->isMixed() ? ['mixed'] : ['male', 'female'];
 
         $results = $request->input('results', []);
