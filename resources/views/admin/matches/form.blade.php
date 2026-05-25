@@ -66,11 +66,28 @@
 
         <div class="grid grid-cols-2 gap-4">
             <div>
-                <label class="block text-xs font-semibold text-gray-600 mb-1">Огноо, цаг</label>
-                <input type="datetime-local" name="scheduled_at"
-                       value="{{ old('scheduled_at', isset($match) ? $match->scheduled_at->format('Y-m-d\TH:i') : '') }}"
-                       class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm" required>
+                <label class="block text-xs font-semibold text-gray-600 mb-1">Огноо</label>
+                <input type="date" name="scheduled_date"
+                       value="{{ old('scheduled_date', isset($match) && $match->scheduled_at ? $match->scheduled_at->format('Y-m-d') : '') }}"
+                       class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm">
             </div>
+            <div>
+                <label class="block text-xs font-semibold text-gray-600 mb-1">Цаг <span class="text-gray-400 font-normal">(заавал биш)</span></label>
+                <select name="scheduled_time" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm">
+                    <option value="">— сонгох —</option>
+                    @php
+                        $selectedTime = old('scheduled_time', isset($match) && $match->scheduled_at ? $match->scheduled_at->format('H:i') : '');
+                    @endphp
+                    @for($h = 7; $h <= 22; $h++)
+                        @foreach(['00','30'] as $min)
+                            @php $val = sprintf('%02d:%s', $h, $min); @endphp
+                            <option value="{{ $val }}" {{ $selectedTime === $val ? 'selected' : '' }}>{{ $val }}</option>
+                        @endforeach
+                    @endfor
+                </select>
+            </div>
+        </div>
+        <div class="grid grid-cols-2 gap-4">
             <div>
                 <label class="block text-xs font-semibold text-gray-600 mb-1">Шат / Round</label>
                 <input type="text" name="round" value="{{ old('round', $match->round ?? '') }}"

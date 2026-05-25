@@ -74,6 +74,14 @@
 
 </div>
 
+{{-- Нээлтийн ажиллагаа --}}
+<div class="bg-yellow-400">
+    <div class="max-w-5xl mx-auto px-4 py-3 flex items-center justify-center gap-3 text-blue-900 text-sm font-semibold">
+        <span class="text-lg">🎉</span>
+        <span>НЭЭЛТИЙН АЖИЛЛАГАА: 2026 оны 05 дугаар сарын 25-ний 14:00 цагт</span>
+    </div>
+</div>
+
 {{-- Sports grid --}}
 <div id="sports" class="bg-gray-50 py-14">
     <div class="max-w-5xl mx-auto px-4">

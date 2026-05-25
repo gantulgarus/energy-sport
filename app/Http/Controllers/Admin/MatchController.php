@@ -41,20 +41,25 @@ class MatchController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'sport_id'     => 'required|exists:sports,id',
-            'team1_id'     => 'required|exists:teams,id|different:team2_id',
-            'team2_id'     => 'required|exists:teams,id',
-            'gender'       => 'required|in:male,female,mixed',
-            'scheduled_at' => 'required|date',
+            'sport_id'       => 'required|exists:sports,id',
+            'team1_id'       => 'required|exists:teams,id|different:team2_id',
+            'team2_id'       => 'required|exists:teams,id',
+            'gender'         => 'required|in:male,female,mixed',
+            'scheduled_date' => 'nullable|date',
+            'scheduled_time' => 'nullable|date_format:H:i',
         ]);
 
         abort_unless(auth()->user()->canManageSport($request->sport_id), 403);
 
-        $match = GameMatch::create($request->only([
+        $scheduledAt = null;
+        if ($request->scheduled_date) {
+            $scheduledAt = $request->scheduled_date . ' ' . ($request->scheduled_time ? $request->scheduled_time . ':00' : '00:00:00');
+        }
+
+        $match = GameMatch::create(array_merge($request->only([
             'sport_id', 'team1_id', 'team2_id', 'gender',
-            'round', 'venue', 'scheduled_at',
-            'team1_score', 'team2_score', 'status', 'notes',
-        ]));
+            'round', 'venue', 'team1_score', 'team2_score', 'status', 'notes',
+        ]), ['scheduled_at' => $scheduledAt]));
 
         $slug = Sport::find($match->sport_id)->slug;
         return redirect()->route('admin.matches.index', ['sport' => $slug])->with('success', 'Тоглолт нэмэгдлээ.');
@@ -77,18 +82,23 @@ class MatchController extends Controller
         abort_unless(auth()->user()->canManageSport($match->sport_id), 403);
 
         $request->validate([
-            'sport_id'     => 'required|exists:sports,id',
-            'team1_id'     => 'required|exists:teams,id|different:team2_id',
-            'team2_id'     => 'required|exists:teams,id',
-            'gender'       => 'required|in:male,female,mixed',
-            'scheduled_at' => 'required|date',
+            'sport_id'       => 'required|exists:sports,id',
+            'team1_id'       => 'required|exists:teams,id|different:team2_id',
+            'team2_id'       => 'required|exists:teams,id',
+            'gender'         => 'required|in:male,female,mixed',
+            'scheduled_date' => 'nullable|date',
+            'scheduled_time' => 'nullable|date_format:H:i',
         ]);
 
-        $match->update($request->only([
+        $scheduledAt = null;
+        if ($request->scheduled_date) {
+            $scheduledAt = $request->scheduled_date . ' ' . ($request->scheduled_time ? $request->scheduled_time . ':00' : '00:00:00');
+        }
+
+        $match->update(array_merge($request->only([
             'sport_id', 'team1_id', 'team2_id', 'gender',
-            'round', 'venue', 'scheduled_at',
-            'team1_score', 'team2_score', 'status', 'notes',
-        ]));
+            'round', 'venue', 'team1_score', 'team2_score', 'status', 'notes',
+        ]), ['scheduled_at' => $scheduledAt]));
 
         $slug = Sport::find($match->sport_id)->slug;
         return redirect()->route('admin.matches.index', ['sport' => $slug])->with('success', 'Тоглолт шинэчлэгдлээ.');
