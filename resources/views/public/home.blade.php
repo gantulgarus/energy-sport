@@ -109,7 +109,7 @@
 <div class="bg-white border-t border-gray-100">
     <div class="max-w-5xl mx-auto px-4 py-14">
         <div class="text-center mb-8">
-            <span class="text-xs font-bold tracking-widest text-blue-600 uppercase">Тэмцээний</span>
+            <span class="text-xs font-bold tracking-widest text-blue-600 uppercase">Сүүлийн үр дүн &amp; тэмцээний</span>
             <h2 class="text-2xl sm:text-3xl font-black text-gray-900 mt-1">Хуваарь</h2>
         </div>
 

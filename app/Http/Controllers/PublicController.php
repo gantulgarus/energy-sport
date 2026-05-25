@@ -16,9 +16,12 @@ class PublicController extends Controller
         $sports = Sport::orderBy('sort_order')->get();
         $teamsCount = Team::where('is_active', true)->count();
         $schedule = GameMatch::with(['sport', 'team1', 'team2'])
-            ->orderBy('scheduled_at')
+            ->orderByDesc('scheduled_at')
             ->get()
-            ->groupBy(fn($m) => $m->scheduled_at->toDateString());
+            ->groupBy(fn($m) => $m->scheduled_at->toDateString())
+            ->map(fn($day) => $day->sortBy(fn($m) => match($m->status) {
+                'finished' => 0, 'live' => 1, default => 2
+            }));
         return view('public.home', compact('sports', 'teamsCount', 'schedule'));
     }
 
