@@ -7,7 +7,7 @@ use App\Models\Sport;
 use App\Models\Team;
 use App\Models\Result;
 use App\Models\GameMatch;
-use Illuminate\Http\Request;
+
 
 class PublicController extends Controller
 {
@@ -16,12 +16,10 @@ class PublicController extends Controller
         $sports = Sport::orderBy('sort_order')->get();
         $teamsCount = Team::where('is_active', true)->count();
         $schedule = GameMatch::with(['sport', 'team1', 'team2'])
-            ->orderByDesc('scheduled_at')
+            ->orderBy('scheduled_at')
             ->get()
             ->groupBy(fn($m) => $m->scheduled_at->toDateString())
-            ->map(fn($day) => $day->sortBy(fn($m) => match($m->status) {
-                'finished' => 0, 'live' => 1, default => 2
-            }));
+            ->reverse();
         return view('public.home', compact('sports', 'teamsCount', 'schedule'));
     }
 
