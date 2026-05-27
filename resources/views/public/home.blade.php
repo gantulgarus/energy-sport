@@ -78,7 +78,7 @@
 <div class="bg-yellow-400">
     <div class="max-w-5xl mx-auto px-4 py-3 flex items-center justify-center gap-3 text-blue-900 text-sm font-semibold">
         <span class="text-lg">🎉</span>
-        <span>НЭЭЛТИЙН АЖИЛЛАГАА: 2026 оны 05 дугаар сарын 25-ний 14:00 цагт</span>
+        <span>ХААЛТЫН АЖИЛЛАГАА: 2027 оны 05 дугаар сарын 27 · UG ARENA</span>
     </div>
 </div>
 
